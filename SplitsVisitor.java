@@ -1,5 +1,12 @@
 package org.splits;
 
+/*==========================================================================================
+ * This module implements visitors for the rules in the SplitsParser grammar, that produce
+ * the model data for each game that then is used to compute the score as the parse is
+ * complete.
+ *========================================================================================== 
+ */
+
 import lombok.Getter;
 //import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +39,11 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		score = 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitGame(main.antlr4.SplitsParser.GameContext)
+	 * 
+	 * tell the parser to visit each child rule, at the end of the game parse compute the final score
+	 */
 	@Override
 	public Void visitGame(GameContext ctx){
 		visitChildren(ctx);
@@ -39,6 +51,11 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitFrame(main.antlr4.SplitsParser.FrameContext)
+	 * 
+	 * create a new frame
+	 */
 	@Override
 	public Void visitFrame(FrameContext ctx){
 		frameCnt++;
@@ -48,6 +65,12 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitTenthFrame(main.antlr4.SplitsParser.TenthFrameContext)
+	 * 
+	 * 
+	 * create the final frame
+	 */
 	@Override
 	public Void visitTenthFrame(TenthFrameContext ctx){
 		frameCnt++;
@@ -57,6 +80,11 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitStrike(main.antlr4.SplitsParser.StrikeContext)
+	 * 
+	 * this frame will only have a single pin count.
+	 */
 	@Override
 	public Void visitStrike(StrikeContext ctx){
 		visitChildren(ctx);
@@ -66,6 +94,13 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitSpare(main.antlr4.SplitsParser.SpareContext)
+	 * 
+	 * this frame will have a pin count of two(unless 10th) the first roll has already been added,
+	 * compute the second roll's pin count
+	 * set the spare flag
+	 */
 	@Override
 	public Void visitSpare(SpareContext ctx){
 		visitChildren(ctx);
@@ -76,6 +111,11 @@ public class SplitsVisitor extends SplitsParserBaseVisitor<Void>{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see main.antlr4.SplitsParserBaseVisitor#visitPin(main.antlr4.SplitsParser.PinContext)
+	 * 
+	 * this is always visited for each roll that has a numeric pin count or gutterball.
+	 */
 	@Override
 	public Void visitPin(PinContext ctx){
 		visitChildren(ctx);
